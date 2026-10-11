@@ -16,16 +16,16 @@ def load_pdf(file_path: str):
     """
     document = pymupdf.open(file_path)
 
-    pages = []
+    pdf_pages = []
 
     for page_number, page in enumerate(document, start=1):
         text = page.get_text()
 
-        pages.append({
+        pdf_pages.append({
             "page": page_number,
             "text": text
         })
 
     document.close()
 
-    return pages
+    return pdf_pages
