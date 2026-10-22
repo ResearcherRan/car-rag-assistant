@@ -116,9 +116,17 @@ def clean_text(page_data):
     Returns:
         list[dict]: 结构同入参，text 为清洗后的文本。
                     保持页数和页序不变，空页保留（便于页码对齐）。
+                    headings（load_pdf 给的标题）也走一遍同样的清洗——标题里同样
+                    有乱码（「铭牌尧车辆识别代号」→「铭牌、车辆识别代号」），
+                    不清的话 chunker 在正文里定位不到它，section 就会错位。
+                    其余字段原样透传。
     """
-    return [
-        {"page": item["page"],
-         "text": clean_page_text(item.get("text") or "")}
-        for item in page_data
-    ]
+    out = []
+    for item in page_data:
+        cleaned = dict(item, text=clean_page_text(item.get("text") or ""))
+        if "headings" in item:
+            cleaned["headings"] = [
+                h for h in map(clean_page_text, item["headings"]) if h
+            ]
+        out.append(cleaned)
+    return out
