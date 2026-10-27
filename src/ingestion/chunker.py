@@ -200,7 +200,7 @@ def _split_long_spans(text: str, spans: list[tuple[int, int]], max_len: int) -> 
 
 def split_page(
     text: str,
-    chunk_size: int = 450,
+    chunk_size: int = 420,
     overlap_sents: int = 1,
     min_chars: int = 60,
 ) -> list[dict]:
@@ -269,7 +269,7 @@ def split_page(
 
 def split_text(
     page_data,
-    chunk_size: int = 450,
+    chunk_size: int = 420,
     overlap_sents: int = 1,
     min_chars: int = 60,
 ) -> list[dict]:
@@ -278,8 +278,10 @@ def split_text(
     Args:
         page_data: load_pdf + clean_text 的输出，每项需含 page/text，
                    可选 headings（load_pdf 会提供，用于填 section）。
-        chunk_size: 单块字符预算。中文约 1 字 1 token，bge-small 上限 512 token，
-                    450 留了余量；超过上限会被静默截断，尾部信息直接丢失。
+        chunk_size: 单块字符预算。中文约 1 字 1 token，bge-small 上限 512 token。
+                    取 420 是因为页尾短块（<min_chars）会并进上一块，最坏
+                    420+60=480 字，再留出 [CLS]/[SEP] 的余量；超过上限会被
+                    静默截断，尾部信息直接丢失且不报错。
         overlap_sents: 相邻块重叠几句，0 表示不重叠。
         min_chars: 页尾残余短于这个长度就并入上一块。
 

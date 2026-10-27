@@ -34,7 +34,7 @@ def load_pdf(file_path: str) -> list[dict]:
         list[dict]:
         [
             {
-                "page"1: 1,                      # PDF 页码，从 1 开始
+                "page": 1,                       # PDF 页码，从 1 开始
                 "text": "第一页文本...",          # page.get_text() 的原始输出
                 "headings": ["磨合期", "…"],     # 本页字号 >= HEADING_MIN_SIZE 的行
             },
